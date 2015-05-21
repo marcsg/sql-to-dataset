@@ -5,12 +5,13 @@
 #
 # Author: Marcelo Santos Guimaraes
 # Email: marcsgbh@gmail.com
-# Last Modified: May 18 2015
+# Last Modified: May 21 2015
 # Version: 0.1
 #
 
 import lxml.etree as ET
 import sys, getopt, re, datetime
+import os.path
 
 def usage():
   print 'Usage: '+sys.argv[0]+' -i input [-t table] [-o output] [-x xslt] [-l]'
@@ -31,7 +32,7 @@ def main(argv):
 
   # Handle input
   try:
-    opts, args = getopt.getopt(argv, "lhi:o:t:",["input=","output="])
+    opts, args = getopt.getopt(argv, "lhi:o:t:x:",["input=","output="])
   except getopt.GetoptError:
     usage()
     sys.exit(2)
@@ -56,6 +57,9 @@ def main(argv):
     print "error: input not provided."
     usage()
     exit(2)
+  elif not os.path.isfile(inputFile):
+    print "error: input file " + inputFile + " not found."
+    exit(2)
 
   if not tableName:
     print "info: default table name is 'TABLE'"
@@ -64,6 +68,10 @@ def main(argv):
   if not outputFile:
     print "info: default output file is 'output.xml'"
     outputFile = "output.xml"
+
+  if not os.path.isfile(xsltFile):
+    print "error: xslt file " + xsltFile + " not found."
+    exit(2)
 
   print
 
