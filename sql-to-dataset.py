@@ -96,17 +96,21 @@ def main(argv):
         name = attr
       value = element.get(attr)
       # Check if attribute value is a date. If it is, convert to ISO format
-      matchValue = re.match('^\d\d/\d\d/\d\d \d\d:\d\d:\d\d', value)
+      matchValue = re.match('^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d', value)
       if matchValue:
-        value = formatFullDate(matchValue.group())
+        value = matchValue.group()
       else:
-        matchValue = re.match('^\d\d/\d\d/\d\d$', value)
+        matchValue = re.match('^\d\d/\d\d/\d\d \d\d:\d\d:\d\d', value)
         if matchValue:
-          value = formatSimpleDate(matchValue.group())
+          value = formatFullDate(matchValue.group())
         else:
-          matchValue = re.match('^\d*,\d*$', value)
+          matchValue = re.match('^\d\d/\d\d/\d\d$', value)
           if matchValue:
-            value = formatDoubleValue(matchValue.group())
+            value = formatSimpleDate(matchValue.group())
+          else:
+            matchValue = re.match('^\d*,\d*$', value)
+            if matchValue:
+              value = formatDoubleValue(matchValue.group())
 
       del element.attrib[attr] # delete old uppercase attribute
 
